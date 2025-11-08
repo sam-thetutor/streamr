@@ -5,6 +5,7 @@ import { useWallet } from "./useWallet";
 import { useStreamerContract } from "./useStreamerContract";
 import { useNotification } from "./useNotification";
 import { createTokenTrustline } from "../util/token";
+import { Address as StellarBaseAddress, scValToBigInt, xdr } from "@stellar/stellar-base";
 
 /**
  * Subscription data structure from contract
@@ -116,21 +117,247 @@ export const useSubscriptions = () => {
     []
   );
 
+  const unwrapAddress = useCallback((value: unknown): string => {
+    if (!value) return "";
+    const asString = String(value).trim();
+    if (asString.startsWith("\"") && asString.endsWith("\"")) {
+      return asString.slice(1, -1);
+    }
+    return asString;
+  }, []);
+
+  const mapRawSubscription = useCallback(
+    (subscription: any): Subscription | null => {
+      if (!subscription) return null;
+      const id = Number(subscription.id?.toString?.() ?? subscription.id);
+      if (Number.isNaN(id)) return null;
+
+      const amount = subscription.amount_per_interval?.toString?.() ?? subscription.amount_per_interval ?? "0";
+      const intervalSeconds = subscription.interval_seconds?.toString?.() ?? subscription.interval_seconds ?? "0";
+      const nextPaymentTime = subscription.next_payment_time?.toString?.() ?? subscription.next_payment_time ?? "0";
+      const balance = subscription.balance?.toString?.() ?? subscription.balance ?? "0";
+
+      return {
+        id,
+        subscriber: unwrapAddress(subscription.subscriber || ""),
+        receiver: unwrapAddress(subscription.receiver || ""),
+        token_contract: unwrapAddress(subscription.token_contract || ""),
+        amount_per_interval: BigInt(amount || "0"),
+        interval_seconds: BigInt(intervalSeconds || "0"),
+        next_payment_time: BigInt(nextPaymentTime || "0"),
+        active: Boolean(subscription.active),
+        balance: BigInt(balance || "0"),
+        title: unwrapOptionalText(subscription.title),
+        description: unwrapOptionalText(subscription.description),
+      };
+    },
+    [unwrapAddress, unwrapOptionalText]
+  );
+
+  const decodeSubscriptionScVal = useCallback(
+    (scVal: xdr.ScVal): Subscription | null => {
+      try {
+        if (!scVal) return null;
+        if (scVal.switch().value !== xdr.ScValType.scvMap().value) {
+          return null;
+        }
+
+        const entries = scVal.map() ?? [];
+        const fieldMap = new Map<string, xdr.ScVal>();
+        entries.forEach((entry) => {
+          const keyVal = entry.key();
+          if (keyVal.switch().value === xdr.ScValType.scvSymbol().value) {
+            fieldMap.set(keyVal.sym().toString(), entry.val());
+          }
+        });
+
+        const bytesToUtf8 = (value: Buffer | Uint8Array): string => {
+          if (typeof Buffer !== "undefined" && Buffer.isBuffer(value)) {
+            return value.toString("utf-8");
+          }
+          const array = value instanceof Uint8Array ? value : Uint8Array.from(value);
+          if (typeof TextDecoder !== "undefined") {
+            return new TextDecoder("utf-8").decode(array);
+          }
+          let result = "";
+          array.forEach((code) => {
+            result += String.fromCharCode(code);
+          });
+          return result;
+        };
+
+        const decodeText = (value?: xdr.ScVal): string | null => {
+          if (!value) return null;
+          const type = value.switch().value;
+          if (type === xdr.ScValType.scvString().value) {
+            return unwrapOptionalText(value.str().toString());
+          }
+          if (type === xdr.ScValType.scvSymbol().value) {
+            return unwrapOptionalText(value.sym().toString());
+          }
+          if (type === xdr.ScValType.scvVec().value) {
+            const vec = value.vec() ?? [];
+            if (!vec.length) return null;
+            const tag = vec[0];
+            if (tag && tag.switch().value === xdr.ScValType.scvSymbol().value) {
+              const symbol = tag.sym().toString();
+              if (symbol === "some" && vec.length > 1) {
+                return decodeText(vec[1]);
+              }
+              if (symbol === "none") {
+                return null;
+              }
+            }
+            return decodeText(vec[0]);
+          }
+          if (type === xdr.ScValType.scvVoid().value) {
+            return null;
+          }
+          if (type === xdr.ScValType.scvBytes().value) {
+            const bytes = value.bytes();
+            const text = bytesToUtf8(bytes);
+            return unwrapOptionalText(text);
+          }
+          return unwrapOptionalText(value.toString());
+        };
+
+        const decodeAddress = (value?: xdr.ScVal): string => {
+          if (!value) return "";
+          const type = value.switch().value;
+          if (type === xdr.ScValType.scvAddress().value) {
+            return StellarBaseAddress.fromScAddress(value.address()).toString();
+          }
+          if (type === xdr.ScValType.scvString().value) {
+            return unwrapAddress(value.str().toString());
+          }
+          if (type === xdr.ScValType.scvVec().value) {
+            const vec = value.vec() ?? [];
+            if (!vec.length) return "";
+            return decodeAddress(vec[0]);
+          }
+          return "";
+        };
+
+        const decodeBigIntVal = (value?: xdr.ScVal): bigint => {
+          if (!value) return BigInt(0);
+          const t = value.switch().value;
+          if (
+            t === xdr.ScValType.scvI128().value ||
+            t === xdr.ScValType.scvU128().value ||
+            t === xdr.ScValType.scvI256().value ||
+            t === xdr.ScValType.scvU256().value
+          ) {
+            return scValToBigInt(value);
+          }
+          if (t === xdr.ScValType.scvU64().value) {
+            return scValToBigInt(xdr.ScVal.scvU64(value.u64()));
+          }
+          if (t === xdr.ScValType.scvI64().value) {
+            return scValToBigInt(xdr.ScVal.scvI64(value.i64()));
+          }
+          if (t === xdr.ScValType.scvU32().value) {
+            return BigInt(value.u32());
+          }
+          if (t === xdr.ScValType.scvI32().value) {
+            return BigInt(value.i32());
+          }
+          return BigInt(0);
+        };
+
+        const idVal = fieldMap.get("id");
+        const subscriberVal = fieldMap.get("subscriber");
+        const receiverVal = fieldMap.get("receiver");
+        const tokenContractVal = fieldMap.get("token_contract");
+
+        const amountVal = decodeBigIntVal(fieldMap.get("amount_per_interval"));
+        const intervalSecondsVal = decodeBigIntVal(fieldMap.get("interval_seconds"));
+        const nextPaymentTimeVal = decodeBigIntVal(fieldMap.get("next_payment_time"));
+        const balanceVal = decodeBigIntVal(fieldMap.get("balance"));
+        const activeVal =
+          fieldMap.get("active")?.switch().value === xdr.ScValType.scvBool().value
+            ? Boolean(fieldMap.get("active")?.b())
+            : false;
+
+        const id =
+          idVal && idVal.switch().value === xdr.ScValType.scvU32().value ? Number(idVal.u32()) : 0;
+
+        const rawSubscription = {
+          id,
+          subscriber: decodeAddress(subscriberVal),
+          receiver: decodeAddress(receiverVal),
+          token_contract: decodeAddress(tokenContractVal),
+          amount_per_interval: amountVal,
+          interval_seconds: intervalSecondsVal,
+          next_payment_time: nextPaymentTimeVal,
+          active: activeVal,
+          balance: balanceVal,
+          title: decodeText(fieldMap.get("title")),
+          description: decodeText(fieldMap.get("description")),
+        };
+
+        return mapRawSubscription(rawSubscription);
+      } catch (err) {
+        console.error("Failed to decode subscription ScVal", err);
+        return null;
+      }
+    },
+    [mapRawSubscription, unwrapAddress, unwrapOptionalText]
+  );
+
+  const decodeSubscriptionListScVal = useCallback(
+    (scVal: xdr.ScVal): Subscription[] => {
+      if (!scVal) return [];
+      if (scVal.switch().value === xdr.ScValType.scvVec().value) {
+        const vec = scVal.vec() ?? [];
+        const subscriptions: Subscription[] = [];
+        vec.forEach((item) => {
+          const decoded = decodeSubscriptionScVal(item);
+          if (decoded) {
+            subscriptions.push(decoded);
+          }
+        });
+        return subscriptions;
+      }
+
+      const single = decodeSubscriptionScVal(scVal);
+      return single ? [single] : [];
+    },
+    [decodeSubscriptionScVal]
+  );
+
   /**
    * Fetch a single subscription by ID
    */
   const fetchSubscription = useCallback(
     async (subscriptionId: number): Promise<Subscription> => {
       const client = getContractClient();
-      const result = await client.get_subscription({ subscription_id: subscriptionId });
-      const subscription = result as any;
-      return {
-        ...(subscription as Subscription),
-        title: unwrapOptionalText(subscription.title),
-        description: unwrapOptionalText(subscription.description),
-      };
+      const tx = await client.get_subscription({ subscription_id: subscriptionId }, { simulate: false });
+
+      try {
+        await tx.simulate();
+      } catch (simulateError) {
+        console.warn(`Simulation failed for subscription ${subscriptionId}`, simulateError);
+      }
+
+      try {
+        const raw = (tx as any).result ?? (tx as any);
+        const parsed = raw?.result ?? raw;
+        const mapped = mapRawSubscription(parsed);
+        if (mapped) {
+          return mapped;
+        }
+      } catch (err) {
+        console.warn(`Generated bindings failed to parse subscription ${subscriptionId}`, err);
+      }
+
+      const fallback = decodeSubscriptionScVal(tx.simulationData.result.retval);
+      if (fallback) {
+        return fallback;
+      }
+
+      throw new Error(`Unable to decode subscription ${subscriptionId}`);
     },
-    [getContractClient, unwrapOptionalText]
+    [getContractClient, mapRawSubscription, decodeSubscriptionScVal]
   );
 
   /**
@@ -143,70 +370,67 @@ export const useSubscriptions = () => {
     }
 
     const client = getContractClient();
-    
-    try {
-      // Use the new contract method to get all user subscriptions
-      // This is a read-only query, so we simulate it and get the result
-      const result = await client.get_user_subscriptions_all({ 
-        user: address 
-      }, {
-        simulate: true, // Explicitly simulate to get the result
-      });
-      
-      // For read-only queries, the result is available after simulation
-      // Access the result from the AssembledTransaction
-      const subscriptions = result.result || [];
-      
-      // Convert contract Subscription[] to our Subscription[] format
-      // Handle the case where subscriptions might be an array or ScVal
-      let subscriptionArray: any[] = [];
-      if (Array.isArray(subscriptions)) {
-        subscriptionArray = subscriptions;
-      } else if (subscriptions && typeof subscriptions === 'object') {
-        // If it's a wrapped array or ScVal, extract the array
-        subscriptionArray = (subscriptions as any).value || (subscriptions as any).values || [];
-      }
-      
-      // Map and deduplicate subscriptions by ID
-      const subscriptionMap = new Map<number, Subscription>();
-      
-      subscriptionArray.forEach((subscription: any) => {
-        // Handle different possible formats
-        const id = subscription.id?.toString() || subscription.id;
-        const subscriptionId = Number(id);
-        
-        // Only add if we haven't seen this subscription ID before
-        if (!subscriptionMap.has(subscriptionId)) {
-          const amount = subscription.amount_per_interval?.toString() || subscription.amount_per_interval;
-          const intervalSeconds = subscription.interval_seconds?.toString() || subscription.interval_seconds;
-          const nextPaymentTime = subscription.next_payment_time?.toString() || subscription.next_payment_time;
-          
-          const balance = subscription.balance?.toString() || subscription.balance || '0';
-          const subscriber = String(subscription.subscriber ?? "").trim();
-          const receiver = String(subscription.receiver ?? "").trim();
-          
-          subscriptionMap.set(subscriptionId, {
-            id: subscriptionId,
-            subscriber,
-            receiver,
-            token_contract: subscription.token_contract || '',
-            amount_per_interval: BigInt(amount || '0'),
-            interval_seconds: BigInt(intervalSeconds || '0'),
-            next_payment_time: BigInt(nextPaymentTime || '0'),
-            active: subscription.active || false,
-            balance: BigInt(balance),
-            title: unwrapOptionalText(subscription.title),
-            description: unwrapOptionalText(subscription.description),
+    const ids = new Set<number>();
+
+    const collectIds = async (promise: Promise<any>) => {
+      try {
+        const tx = await promise;
+        if (!tx || typeof tx.simulate !== "function") {
+          console.warn("collectIds received unexpected response", tx);
+          return;
+        }
+
+        try {
+          await tx.simulate();
+        } catch (simulateError) {
+          console.warn("Simulation failed for subscription ID fetch", simulateError);
+        }
+
+        const resultScVal = tx.simulationData?.result?.retval;
+        const arr: number[] = [];
+        if (resultScVal && resultScVal.switch().value === xdr.ScValType.scvVec().value) {
+          const vec = resultScVal.vec() ?? [];
+          vec.forEach((item) => {
+            if (item.switch().value === xdr.ScValType.scvU32().value) {
+              arr.push(Number(item.u32()));
+            } else if (item.switch().value === xdr.ScValType.scvI32().value) {
+              arr.push(Number(item.i32()));
+            } else {
+              const num = Number(item.toString?.() ?? NaN);
+              if (!Number.isNaN(num)) {
+                arr.push(num);
+              }
+            }
           });
         }
-      });
-      
-      return Array.from(subscriptionMap.values());
-    } catch (error) {
-      console.error("Error fetching user subscriptions:", error);
-      return [];
+
+        arr.forEach((num) => {
+          if (!Number.isNaN(num)) {
+            ids.add(num);
+          }
+        });
+      } catch (err) {
+        console.error("Failed to collect subscription IDs", err);
+      }
+    };
+
+    await collectIds(client.get_user_subs_ids({ user: address }, { simulate: false }));
+    await collectIds(client.get_user_rcvd_subs_ids({ user: address }, { simulate: false }));
+
+    const subscriptions: Subscription[] = [];
+    for (const id of ids) {
+      try {
+        const subscription = await fetchSubscription(id);
+        if (subscription) {
+          subscriptions.push(subscription);
+        }
+      } catch (err) {
+        console.error(`Failed to fetch subscription ${id}`, err);
+      }
     }
-  }, [address, getContractClient, unwrapOptionalText]);
+
+    return subscriptions;
+  }, [address, getContractClient, fetchSubscription]);
 
   /**
    * Query hook for fetching all subscriptions

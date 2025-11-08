@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, useNavigate, useLocation, Link } from "react-router-dom";
 import { Icon } from "@stellar/design-system";
 import { useWallet } from "../../hooks/useWallet";
 import "./dashboard.css";
@@ -111,10 +111,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
   return (
     <aside className={`dashboard-sidebar ${isCollapsed ? "collapsed" : ""}`}>
       <div className="sidebar-header">
-        <div className="sidebar-logo">
+        <Link to="/" className="sidebar-logo" title="Go to home">
           <Icon.Code02 size="lg" />
           {!isCollapsed && <span>Streamr</span>}
-        </div>
+        </Link>
         <button className="sidebar-toggle" onClick={onToggle} aria-label="Toggle sidebar">
           {isCollapsed ? <Icon.ChevronRight size="sm" /> : <Icon.ChevronLeft size="sm" />}
         </button>

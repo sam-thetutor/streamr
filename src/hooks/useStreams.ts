@@ -5,6 +5,7 @@ import { useWallet } from "./useWallet";
 import { useStreamerContract } from "./useStreamerContract";
 import { useNotification } from "./useNotification";
 import { Address } from "@stellar/stellar-sdk/contract";
+import { Address as StellarBaseAddress, scValToBigInt, xdr } from "@stellar/stellar-base";
 
 /**
  * Stream data structure from contract
@@ -184,54 +185,14 @@ export const useStreams = () => {
   );
 
   /**
-   * Fetch a single stream by ID
+   * Normalize raw stream data to the Stream interface
    */
-  const fetchStream = useCallback(
-    async (streamId: number): Promise<Stream> => {
-      const client = getContractClient();
-      const result = await client.get_stream({ stream_id: streamId });
-      
-      // Convert contract Stream to our Stream format
-      const stream = result.result || result;
-      const recipientsArray: string[] = Array.isArray(stream.recipients)
-        ? stream.recipients.map(unwrapAddress)
-        : [];
-      const primaryRecipient =
-        recipientsArray.length > 0 ? recipientsArray[0] : unwrapAddress(stream.recipient);
-
-      return {
-        id: Number(stream.id),
-        sender: unwrapAddress(stream.sender),
-        recipient: primaryRecipient,
-        recipients: recipientsArray,
-        token_contract: stream.token_contract,
-        rate_per_second: BigInt(stream.rate_per_second.toString()),
-        deposit: BigInt(stream.deposit.toString()),
-        start_time: BigInt(stream.start_time.toString()),
-        last_withdraw_time: BigInt(stream.last_withdraw_time.toString()),
-        is_active: stream.is_active,
-        title: unwrapOptionalText(stream.title),
-        description: unwrapOptionalText(stream.description),
-      };
-    },
-    [getContractClient, unwrapOptionalText, unwrapAddress]
-  );
-
-  /**
-   * Fetch all streams for the current user using the new contract method
-   * This is much more efficient than iterating through stream IDs
-   */
-  const fetchAllStreams = useCallback(async (): Promise<Stream[]> => {
-    if (!address) {
-      return [];
-    }
-
-    const client = getContractClient();
-
-    const mapRawStream = (stream: any): Stream | null => {
+  const mapRawStream = useCallback(
+    (stream: any): Stream | null => {
       if (!stream) return null;
       const id = Number(stream.id?.toString?.() ?? stream.id);
       if (Number.isNaN(id)) return null;
+
       const recipientsArray: string[] = Array.isArray(stream.recipients)
         ? stream.recipients.map(unwrapAddress)
         : [];
@@ -257,7 +218,247 @@ export const useStreams = () => {
         title: unwrapOptionalText(stream.title),
         description: unwrapOptionalText(stream.description),
       };
-    };
+    },
+    [unwrapOptionalText, unwrapAddress]
+  );
+
+  /**
+   * Decode a stream returned as raw ScVal when generated bindings fail to parse
+   */
+  const decodeStreamScVal = useCallback(
+    (scVal: xdr.ScVal): Stream | null => {
+      try {
+        const entries = scVal?.map?.();
+        if (!entries || !Array.isArray(entries)) {
+          return null;
+        }
+
+        const fieldMap = new Map<string, xdr.ScVal>();
+        entries.forEach((entry) => {
+          const keyVal = entry.key();
+          if (keyVal.switch().value === xdr.ScValType.scvSymbol().value) {
+            fieldMap.set(keyVal.sym().toString(), entry.val());
+          }
+        });
+
+        const bytesToUtf8 = (value: Buffer | Uint8Array): string => {
+          if (typeof Buffer !== "undefined" && Buffer.isBuffer(value)) {
+            return value.toString("utf-8");
+          }
+          const array = value instanceof Uint8Array ? value : Uint8Array.from(value);
+          if (typeof TextDecoder !== "undefined") {
+            return new TextDecoder("utf-8").decode(array);
+          }
+          let result = "";
+          array.forEach((code) => {
+            result += String.fromCharCode(code);
+          });
+          return result;
+        };
+
+        const decodeText = (value?: xdr.ScVal): string | null => {
+          if (!value) return null;
+          const type = value.switch().value;
+          if (type === xdr.ScValType.scvString().value) {
+            return unwrapOptionalText(value.str().toString());
+          }
+          if (type === xdr.ScValType.scvSymbol().value) {
+            return unwrapOptionalText(value.sym().toString());
+          }
+          if (type === xdr.ScValType.scvVec().value) {
+            const vec = value.vec() ?? [];
+            if (!vec.length) return null;
+            const tag = vec[0];
+            if (tag && tag.switch().value === xdr.ScValType.scvSymbol().value) {
+              const symbol = tag.sym().toString();
+              if (symbol === "some" && vec.length > 1) {
+                return decodeText(vec[1]);
+              }
+              if (symbol === "none") {
+                return null;
+              }
+            }
+            return decodeText(vec[0]);
+          }
+          if (type === xdr.ScValType.scvVoid().value) {
+            return null;
+          }
+          if (type === xdr.ScValType.scvBytes().value) {
+            const bytes = value.bytes();
+            const text = bytesToUtf8(bytes);
+            return unwrapOptionalText(text);
+          }
+          return unwrapOptionalText(value.toString());
+        };
+
+        const decodeAddress = (value?: xdr.ScVal): string => {
+          if (!value) return "";
+          const type = value.switch().value;
+          if (type === xdr.ScValType.scvAddress().value) {
+            return StellarBaseAddress.fromScAddress(value.address()).toString();
+          }
+          if (type === xdr.ScValType.scvString().value) {
+            return unwrapAddress(value.str().toString());
+          }
+          if (type === xdr.ScValType.scvVec().value) {
+            const vec = value.vec() ?? [];
+            if (!vec.length) return "";
+            return decodeAddress(vec[0]);
+          }
+          return "";
+        };
+
+        const decodeBigIntVal = (value?: xdr.ScVal): bigint => {
+          if (!value) return BigInt(0);
+          const t = value.switch().value;
+          if (
+            t === xdr.ScValType.scvI128().value ||
+            t === xdr.ScValType.scvU128().value ||
+            t === xdr.ScValType.scvI256().value ||
+            t === xdr.ScValType.scvU256().value
+          ) {
+            return scValToBigInt(value);
+          }
+          if (t === xdr.ScValType.scvU64().value) {
+            return scValToBigInt(xdr.ScVal.scvU64(value.u64()));
+          }
+          if (t === xdr.ScValType.scvI64().value) {
+            return scValToBigInt(xdr.ScVal.scvI64(value.i64()));
+          }
+          if (t === xdr.ScValType.scvU32().value) {
+            return BigInt(value.u32());
+          }
+          if (t === xdr.ScValType.scvI32().value) {
+            return BigInt(value.i32());
+          }
+          return BigInt(0);
+        };
+
+        const decodeRecipients = (value?: xdr.ScVal): string[] => {
+          if (!value || value.switch().value !== xdr.ScValType.scvVec().value) {
+            return [];
+          }
+          const vec = value.vec() ?? [];
+          return vec
+            .map((item) => decodeAddress(item))
+            .filter((addr): addr is string => typeof addr === "string" && addr.length > 0);
+        };
+
+        const decodeAddressBigIntMap = (value?: xdr.ScVal): Map<string, bigint> => {
+          const result = new Map<string, bigint>();
+          if (!value || value.switch().value !== xdr.ScValType.scvMap().value) {
+            return result;
+          }
+          const mapEntries = value.map() ?? [];
+          mapEntries.forEach((entry) => {
+            const key = decodeAddress(entry.key());
+            if (!key) return;
+            result.set(key, decodeBigIntVal(entry.val()));
+          });
+          return result;
+        };
+
+        const idVal = fieldMap.get("id");
+        const senderVal = fieldMap.get("sender");
+        const recipientsVal = fieldMap.get("recipients");
+        const tokenContractVal = fieldMap.get("token_contract");
+        const rateMapVal = fieldMap.get("recipient_rate_per_second");
+        const lastWithdrawMapVal = fieldMap.get("recipient_last_withdraw");
+
+        const deposit = decodeBigIntVal(fieldMap.get("deposit"));
+        const startTime = decodeBigIntVal(fieldMap.get("start_time"));
+        const recipients = decodeRecipients(recipientsVal);
+        const sender = decodeAddress(senderVal);
+        const tokenContract = decodeText(tokenContractVal) ?? "";
+        const isActive =
+          fieldMap.get("is_active")?.switch().value === xdr.ScValType.scvBool().value
+            ? Boolean(fieldMap.get("is_active")?.b())
+            : false;
+        const title = decodeText(fieldMap.get("title"));
+        const description = decodeText(fieldMap.get("description"));
+
+        const id =
+          idVal && idVal.switch().value === xdr.ScValType.scvU32().value ? Number(idVal.u32()) : 0;
+
+        const rateMap = decodeAddressBigIntMap(rateMapVal);
+        const lastWithdrawMap = decodeAddressBigIntMap(lastWithdrawMapVal);
+
+        const primaryRecipient = recipients[0] || decodeAddress(fieldMap.get("recipient"));
+        const ratePerSecond =
+          (primaryRecipient && rateMap.get(primaryRecipient)) ??
+          (rateMap.size ? Array.from(rateMap.values())[0] : BigInt(0));
+        const lastWithdrawTime =
+          (primaryRecipient && lastWithdrawMap.get(primaryRecipient)) ?? BigInt(0);
+
+        const rawStream = {
+          id,
+          sender,
+          recipient: primaryRecipient,
+          recipients,
+          token_contract: tokenContract,
+          rate_per_second: ratePerSecond,
+          deposit,
+          start_time: startTime,
+          last_withdraw_time: lastWithdrawTime,
+          is_active: isActive,
+          title,
+          description,
+        };
+
+        return mapRawStream(rawStream);
+      } catch (err) {
+        console.error("Failed to decode stream ScVal", err);
+        return null;
+      }
+    },
+    [mapRawStream, unwrapAddress, unwrapOptionalText]
+  );
+
+  /**
+   * Fetch a single stream by ID
+   */
+  const fetchStream = useCallback(
+    async (streamId: number): Promise<Stream> => {
+      const client = getContractClient();
+      const tx = await client.get_stream({ stream_id: streamId }, { simulate: true });
+
+      try {
+        await tx.simulate();
+      } catch (simulateError) {
+        console.warn(`Simulation failed for stream ${streamId}`, simulateError);
+      }
+
+      try {
+        const raw = (tx as any).result ?? (tx as any);
+        const parsed = raw?.result ?? raw;
+        const mapped = mapRawStream(parsed);
+        if (mapped) {
+          return mapped;
+        }
+      } catch (err) {
+        console.warn(`Generated bindings failed to parse stream ${streamId}`, err);
+      }
+
+      const fallback = decodeStreamScVal(tx.simulationData.result.retval);
+      if (fallback) {
+        return fallback;
+      }
+
+      throw new Error(`Unable to decode stream ${streamId}`);
+    },
+    [getContractClient, mapRawStream, decodeStreamScVal]
+  );
+
+  /**
+   * Fetch all streams for the current user using the new contract method
+   * This is much more efficient than iterating through stream IDs
+   */
+  const fetchAllStreams = useCallback(async (): Promise<Stream[]> => {
+    if (!address) {
+      return [];
+    }
+
+    const client = getContractClient();
 
     const fetchByIds = async (): Promise<Stream[]> => {
       const ids = new Set<number>();
@@ -288,11 +489,30 @@ export const useStreams = () => {
       const streams: Stream[] = [];
       for (const id of ids) {
         try {
-          const res = await client.get_stream({ stream_id: id }, { simulate: true });
-          const rawStream = res?.result || res;
-          const mapped = mapRawStream(rawStream);
+          const tx = await client.get_stream({ stream_id: id }, { simulate: true });
+          try {
+            await tx.simulate();
+          } catch (simulateErr) {
+            console.warn(`Simulation failed for stream ${id}`, simulateErr);
+          }
+
+          let mapped: Stream | null = null;
+          try {
+            const raw = (tx as any).result ?? (tx as any);
+            const parsed = raw?.result ?? raw;
+            mapped = mapRawStream(parsed);
+          } catch (parseErr) {
+            console.warn(`Generated bindings failed to parse stream ${id}`, parseErr);
+          }
+
+          if (!mapped) {
+            mapped = decodeStreamScVal(tx.simulationData.result.retval);
+          }
+
           if (mapped) {
             streams.push(mapped);
+          } else {
+            console.error(`Failed to decode stream ${id}: no data parsed`);
           }
         } catch (err) {
           console.error(`Fallback: failed to fetch stream ${id}`, err);
@@ -303,7 +523,7 @@ export const useStreams = () => {
     };
 
     return await fetchByIds();
-  }, [address, getContractClient, unwrapOptionalText, unwrapAddress]);
+  }, [address, getContractClient, mapRawStream, decodeStreamScVal]);
 
   /**
    * Query hook for fetching all streams
