@@ -1,0 +1,553 @@
+/* Create Stream Page */
+.create-stream-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.create-stream-page,
+.create-stream-page p,
+.create-stream-page span,
+.create-stream-page label,
+.create-stream-page h1,
+.create-stream-page h2,
+.create-stream-page h3,
+.create-stream-page h4,
+.create-stream-page h5,
+.create-stream-page h6,
+.create-stream-page small {
+  color: var(--color-text-inverse);
+}
+
+.page-title {
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text-inverse);
+}
+
+/* Glass utility */
+.glass-form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: var(--glass-dark-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-dark-border);
+  box-shadow: var(--glass-dark-shadow);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+}
+
+@media (prefers-color-scheme: light) {
+  .glass-form-card {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.create-stream-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.form-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section-card {
+  gap: 1.25rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.section-title {
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-text-inverse);
+}
+
+.section-subtitle {
+  margin: 0.25rem 0 0;
+  color: var(--color-text-inverse);
+  opacity: 0.7;
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.field-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.field-grid.two {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.field-grid.three {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-field.full {
+  grid-column: 1 / -1;
+}
+
+.form-field label {
+  font-weight: 600;
+  color: var(--color-text-inverse);
+}
+
+.field-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-inverse);
+  opacity: 0.6;
+}
+
+.description-textarea {
+  min-height: 120px;
+  padding: 0.75rem 1rem;
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-inverse);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.description-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  background: rgba(102, 126, 234, 0.08);
+}
+
+.description-textarea:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.rate-period-select,
+.token-select {
+  padding: 0.75rem 1rem;
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  color: #ffffff;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.rate-period-select:hover,
+.token-select:hover {
+  border-color: rgba(102, 126, 234, 0.4);
+  background: rgba(102, 126, 234, 0.08);
+}
+
+.rate-period-select:focus,
+.token-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.rate-period-select:disabled,
+.token-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(102, 126, 234, 0.25);
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.ghost-button:hover {
+  border-color: rgba(102, 126, 234, 0.45);
+  background: rgba(102, 126, 234, 0.08);
+}
+
+.ghost-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.recipient-input-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.add-recipient-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(102, 126, 234, 0.15);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: var(--radius-lg);
+  color: #ffffff;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.add-recipient-button:hover:not(:disabled) {
+  background: rgba(102, 126, 234, 0.25);
+  border-color: rgba(102, 126, 234, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.add-recipient-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  background: rgba(102, 126, 234, 0.1);
+  border-color: rgba(102, 126, 234, 0.2);
+}
+
+.recipient-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.recipient-table-header,
+.recipient-table-row {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr 0.8fr;
+  gap: 1rem;
+  align-items: center;
+  font-size: var(--font-size-sm);
+}
+
+.recipient-table-header {
+  padding: 0.75rem 1rem;
+  background: rgba(102, 126, 234, 0.08);
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  color: var(--color-text-inverse);
+  opacity: 0.85;
+}
+
+.recipient-table-row {
+  padding: 0.75rem 1rem;
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-inverse);
+}
+
+.recipient-table-row .addr {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  word-break: break-all;
+}
+
+.recipient-actions {
+  display: inline-flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.recipient-actions button {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--transition-base);
+}
+
+.recipient-actions button:hover {
+  color: #ffffff;
+}
+
+.recipient-actions .destructive {
+  color: #ff7676;
+}
+
+.recipient-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  border: 1px dashed rgba(102, 126, 234, 0.3);
+  border-radius: var(--radius-lg);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.form-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.feedback-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+}
+
+.feedback-banner svg {
+  flex-shrink: 0;
+}
+
+.feedback-banner.error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ff6b6b;
+}
+
+.feedback-banner.success {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #51cf66;
+}
+
+.preview-panel {
+  gap: 1.25rem;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.preview-card {
+  background: rgba(102, 126, 234, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  transition: all var(--transition-base);
+}
+
+.preview-card:hover {
+  background: rgba(102, 126, 234, 0.12);
+  border-color: rgba(102, 126, 234, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.preview-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.preview-recipient-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.preview-recipient-header,
+.preview-recipient-row {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 1rem;
+  align-items: center;
+  font-size: var(--font-size-sm);
+}
+
+.preview-recipient-header {
+  padding: 0.75rem 1rem;
+  background: rgba(102, 126, 234, 0.08);
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  color: var(--color-text-inverse);
+  opacity: 0.85;
+}
+
+.preview-recipient-row {
+  padding: 0.75rem 1rem;
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.15);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-inverse);
+}
+
+.preview-recipient-row .addr {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  word-break: break-all;
+}
+
+.preview-recipient-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px dashed rgba(102, 126, 234, 0.25);
+  border-radius: var(--radius-lg);
+  background: rgba(102, 126, 234, 0.03);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: var(--font-size-sm);
+}
+
+.preview-recipient-empty svg {
+  opacity: 0.8;
+}
+
+/* Override Stellar input backgrounds */
+.glass-form-card :global(.Input__container),
+.glass-form-card :global(.Input .Input__container),
+.glass-form-card :global(.Input__container *) {
+  background-color: transparent !important;
+  background: transparent !important;
+  --Input-color-background: transparent !important;
+}
+
+.glass-form-card :global(.Input__container) {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: var(--color-text-inverse) !important;
+}
+
+.glass-form-card :global(.Input__container:focus-within),
+.glass-form-card :global(.Input:hover .Input__container) {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+.glass-form-card :global(.Input__container input),
+.glass-form-card :global(.Input__container input:hover),
+.glass-form-card :global(.Input__container input:focus),
+.glass-form-card :global(.Input__container input:active) {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #ffffff !important;
+}
+
+.glass-form-card input,
+.glass-form-card textarea,
+.glass-form-card select {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  color-scheme: dark;
+}
+
+.glass-form-card input:-webkit-autofill,
+.glass-form-card input:-webkit-autofill:hover,
+.glass-form-card input:-webkit-autofill:focus,
+.glass-form-card input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  box-shadow: 0 0 0px 1000px transparent inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  transition: background-color 99999s ease 0s !important;
+}
+
+.glass-form-card :global(.Input) {
+  --Input-color-background: transparent !important;
+}
+
+/* Section header copy */
+.section-title,
+.section-subtitle,
+.form-field label,
+.field-hint {
+  color: var(--color-text-inverse);
+}
+
+.rate-period-select,
+.token-select,
+.rate-period-select option,
+.token-select option {
+  color: var(--color-text-inverse);
+}
+
+.recipient-table-header,
+.recipient-table-row,
+.recipient-table-row span,
+.recipient-actions button,
+.recipient-empty,
+.preview-recipient-header,
+.preview-recipient-row {
+  color: var(--color-text-inverse);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .preview-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .create-stream-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .recipient-table-header,
+  .recipient-table-row {
+    grid-template-columns: 1.2fr 0.9fr;
+  }
+
+  .recipient-table-row span:nth-child(3),
+  .recipient-table-header span:nth-child(3) {
+    display: none;
+  }
+
+  .preview-recipient-header,
+  .preview-recipient-row {
+    grid-template-columns: 1fr;
+  }
+}

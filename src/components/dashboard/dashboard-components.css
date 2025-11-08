@@ -1,0 +1,382 @@
+/* Stats Card Component */
+.stats-card-component {
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.stats-card-component:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(102, 126, 234, 0.15);
+}
+
+.stats-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.stats-trend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.stats-trend-up {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.stats-trend-down {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.stats-trend-text {
+  font-size: 0.75rem !important;
+  font-weight: 600;
+}
+
+.stats-value {
+  font-weight: 800;
+  font-size: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.stats-label {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Stream Card Component - Dark Glassmorphism (Reduced Size) */
+.stream-card {
+  display: block;
+  padding: 1rem 1.25rem;
+  background: var(--glass-dark-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-dark-border);
+  box-shadow: var(--glass-dark-shadow);
+  transition: all var(--transition-base);
+  border-radius: var(--radius-xl);
+  color: var(--color-text-inverse);
+}
+
+/* For light mode */
+@media (prefers-color-scheme: light) {
+  .stream-card {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.stream-card:hover {
+  background: var(--glass-dark-bg-hover);
+  box-shadow: var(--glass-dark-shadow);
+  transform: translateY(-2px);
+}
+
+@media (prefers-color-scheme: light) {
+  .stream-card:hover {
+    background: rgba(30, 41, 59, 0.9);
+  }
+}
+
+.stream-card-title {
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text-inverse);
+}
+
+.stream-card-description {
+  color: var(--color-text-inverse);
+  opacity: 0.75;
+  margin: 0;
+  font-size: 0.875rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.stream-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.stream-status-active {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.stream-status-inactive {
+  background: rgba(148, 163, 184, 0.1);
+  color: #64748b;
+}
+
+.stream-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.stream-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.stream-progress-text {
+  font-weight: 600;
+  color: var(--color-text-inverse);
+}
+
+.stream-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.stream-stat-value {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--color-text-inverse);
+  margin: 0;
+}
+
+.stream-stat-value-highlight {
+  color: var(--color-text-inverse);
+  font-weight: 800;
+}
+
+/* Ensure all text in stream cards is white */
+.stream-card p,
+.stream-card span,
+.stream-card h3,
+.stream-card svg {
+  color: var(--color-text-inverse);
+}
+
+/* Subscription Card Component - Dark Glassmorphism (Reduced Size) */
+.subscription-card {
+  display: block;
+  padding: 1rem 1.25rem;
+  background: var(--glass-dark-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-dark-border);
+  box-shadow: var(--glass-dark-shadow);
+  transition: all var(--transition-base);
+  border-radius: var(--radius-xl);
+  color: var(--color-text-inverse);
+}
+
+/* For light mode */
+@media (prefers-color-scheme: light) {
+  .subscription-card {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.subscription-card:hover {
+  background: var(--glass-dark-bg-hover);
+  box-shadow: var(--glass-dark-shadow);
+  transform: translateY(-2px);
+}
+
+@media (prefers-color-scheme: light) {
+  .subscription-card:hover {
+    background: rgba(30, 41, 59, 0.9);
+  }
+}
+
+.subscription-card-title {
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text-inverse);
+}
+
+.subscription-card-description {
+  color: var(--color-text-inverse);
+  opacity: 0.75;
+  margin: 0;
+  font-size: 0.875rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.subscription-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.subscription-status-active {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.subscription-status-inactive {
+  background: rgba(148, 163, 184, 0.1);
+  color: #64748b;
+}
+
+.subscription-amount {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text-inverse);
+  margin: 0;
+}
+
+.subscription-due {
+  color: var(--color-text-inverse);
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.subscription-balance {
+  color: var(--color-text-inverse);
+}
+
+/* Ensure all text in subscription cards is white */
+.subscription-card p,
+.subscription-card span,
+.subscription-card h3,
+.subscription-card svg {
+  color: var(--color-text-inverse);
+}
+
+/* Empty State Component */
+.empty-state {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--color-text-inverse);
+}
+
+.empty-state-icon {
+  color: rgba(226, 232, 240, 0.85);
+}
+
+.empty-state-title {
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text-inverse);
+}
+
+.empty-state-description {
+  max-width: 400px;
+  margin: 0;
+  color: var(--color-text-inverse);
+  opacity: 0.8;
+}
+
+.empty-state-button {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.empty-state-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.deposit-input,
+.deposit-input:focus,
+.deposit-input:active {
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+}
+
+.deposit-input::placeholder {
+  color: rgba(15, 23, 42, 0.6) !important;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .stats-card-component,
+  .stream-card,
+  .subscription-card {
+    background: rgba(15, 23, 42, 0.85);
+    border-color: rgba(148, 163, 184, 0.25);
+  }
+
+  .stream-card-title,
+  .subscription-card-title,
+  .empty-state-title {
+    color: #f7fafc;
+  }
+
+  .stream-stats-grid {
+    background: rgba(15, 23, 42, 0.5);
+  }
+
+  .stream-stat-value,
+  .subscription-amount {
+    color: #f7fafc;
+  }
+
+  .stats-value {
+    background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .empty-state-icon {
+    color: rgba(148, 163, 184, 0.85);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stream-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .stats-card-component,
+  .stream-card,
+  .subscription-card {
+    padding: 1rem;
+  }
+
+  .stats-value {
+    font-size: 1.5rem;
+  }
+}
+

@@ -1,0 +1,16 @@
+contracts/
+!src/contracts/
+Cargo.lock
+Cargo.toml
+rust-toolchain.toml
+environments.toml
+!src/contracts/**
+!packages/streamer/**
+node_modules
+packages/streamer/node_modules
+target/
+node_modules/
+packages/**/node_modules/
+packages/streamer/node_modules/
+**/node_modules
+**/node_modules/**

@@ -1,0 +1,192 @@
+.dashboard-overview {
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.dashboard-overview .page-title {
+  margin-bottom: 0;
+}
+
+/* Statistics Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Stat Card Styling - Match Quick Actions Exactly */
+.stat-card {
+  display: block;
+  padding: 2rem 1.5rem;
+  background: var(--glass-dark-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-dark-border);
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  color: var(--color-text-inverse);
+  transition: all var(--transition-base);
+  cursor: default;
+}
+
+/* For light mode, use darker background */
+@media (prefers-color-scheme: light) {
+  .stat-card {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.stat-card:hover {
+  background: var(--glass-dark-bg-hover);
+  box-shadow: var(--glass-dark-shadow);
+  transform: translateY(-2px);
+}
+
+@media (prefers-color-scheme: light) {
+  .stat-card:hover {
+    background: rgba(30, 41, 59, 0.9);
+  }
+}
+
+/* Remove colored borders - match quick actions style */
+.stat-card-blue,
+.stat-card-purple,
+.stat-card-green,
+.stat-card-orange {
+  /* No special border styling */
+}
+
+.stat-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--color-text-inverse);
+}
+
+/* All icons white, no colored backgrounds */
+.stat-card-blue .stat-icon,
+.stat-card-purple .stat-icon,
+.stat-card-green .stat-icon,
+.stat-card-orange .stat-icon {
+  background: transparent;
+  color: var(--color-text-inverse);
+}
+
+.stat-value {
+  font-weight: 600;
+  margin-top: 0.5rem;
+  color: var(--color-text-inverse) !important;
+}
+
+/* Ensure icons and text in stat cards are white - match quick actions */
+.stat-card svg,
+.stat-card p,
+.stat-card span {
+  color: var(--color-text-inverse);
+}
+
+/* But allow specific overrides if needed */
+.stat-card .skeleton-text {
+  opacity: 0.5;
+}
+
+/* Quick Actions */
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.quick-action-card {
+  display: block;
+  padding: 2rem 1.5rem;
+  background: var(--glass-dark-bg);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-dark-border);
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  color: var(--color-text-inverse);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+/* For light mode, use darker background */
+@media (prefers-color-scheme: light) {
+  .quick-action-card {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.quick-action-card:hover {
+  background: var(--glass-dark-bg-hover);
+  box-shadow: var(--glass-dark-shadow);
+  transform: translateY(-2px);
+}
+
+@media (prefers-color-scheme: light) {
+  .quick-action-card:hover {
+    background: rgba(30, 41, 59, 0.9);
+  }
+}
+
+.quick-action-card:visited {
+  color: var(--color-text-inverse);
+}
+
+/* Ensure icons and text in quick action cards are white */
+.quick-action-card svg,
+.quick-action-card p,
+.quick-action-card span {
+  color: var(--color-text-inverse);
+}
+
+/* Loading Skeleton */
+.skeleton {
+  opacity: 0.5;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-text {
+  opacity: 0.5;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-overview {
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+

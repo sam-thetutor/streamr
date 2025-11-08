@@ -1,0 +1,59 @@
+/* Connect Account Container - Ensures proper alignment */
+.connect-account-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  height: 100%;
+  min-height: 36px;
+}
+
+/* Ensure Dashboard Link aligns properly */
+.connect-account-container .dashboard-link {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  box-sizing: border-box;
+}
+
+/* Ensure Wallet Info aligns properly */
+.connect-account-container .wallet-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  box-sizing: border-box;
+}
+
+/* Ensure wallet balance and address button are aligned */
+.connect-account-container .wallet-balance,
+.connect-account-container .wallet-address-button {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .connect-account-container {
+    gap: 0.5rem;
+    min-height: 32px;
+  }
+
+  .connect-account-container .dashboard-link,
+  .connect-account-container .wallet-info,
+  .connect-account-container .wallet-balance,
+  .connect-account-container .wallet-address-button {
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+  }
+}
+

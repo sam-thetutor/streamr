@@ -1,0 +1,58 @@
+/* Dashboard Link - Glassmorphism */
+.dashboard-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.875rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: inherit;
+  white-space: nowrap;
+  color: var(--color-text-inverse);
+  text-decoration: none;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  box-sizing: border-box;
+  line-height: 1;
+}
+
+.dashboard-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.dashboard-link:active {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dashboard-link svg {
+  color: var(--color-text-inverse);
+  width: 18px;
+  height: 18px;
+}
+
+.dashboard-link-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-inverse);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-link-text {
+    display: none;
+  }
+
+  .dashboard-link {
+    padding: 0.25rem;
+    min-width: 32px;
+    justify-content: center;
+  }
+}
+

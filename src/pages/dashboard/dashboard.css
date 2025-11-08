@@ -1,0 +1,96 @@
+.dashboard-overview {
+  width: 100%;
+}
+
+.dashboard-title {
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.quick-action-card {
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.quick-action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.action-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.action-title {
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  padding: 1.5rem;
+}
+
+.stat-value {
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .quick-actions-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .quick-action-card {
+    border-color: rgba(148, 163, 184, 0.2);
+  }
+
+  .quick-action-card:hover {
+    border-color: rgba(129, 140, 248, 0.4);
+    box-shadow: 0 10px 30px rgba(129, 140, 248, 0.2);
+  }
+
+  .action-title {
+    color: #f7fafc;
+  }
+
+  .stat-value {
+    background: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+

@@ -1,0 +1,27 @@
+/* Navbar Logo Styles - Override Stellar Design System */
+:global(.Layout__header .ProjectLogo) {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 52px !important;
+  height: 52px !important;
+  margin-right: 1rem !important;
+  background-image: url("/logo.png") !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+/* Hide default logo elements */
+:global(.Layout__header .ProjectLogo svg),
+:global(.Layout__header .ProjectLogo img),
+:global(.Layout__header .ProjectLogo)::before,
+:global(.Layout__header .ProjectLogo .Badge) {
+  display: none !important;
+}
+
+/* Hide logo text on dashboard pages */
+:global(.Layout__header[data-dashboard="true"] .ProjectLogo .Badge) {
+  display: none !important;
+}
+

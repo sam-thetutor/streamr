@@ -1,0 +1,112 @@
+/* Subscriptions Page */
+.subscriptions-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-weight: 700;
+  margin: 0;
+  color: #1a202c;
+}
+
+/* Tabs */
+.subscriptions-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.tab-button {
+  padding: 0.75rem 1.25rem;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+
+.tab-button:hover {
+  color: #667eea;
+}
+
+.tab-button.active {
+  color: #667eea;
+  font-weight: 600;
+  border-bottom-color: #667eea;
+}
+
+.tab-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Subscriptions Grid - Reduced size cards */
+.subscriptions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+/* Error Message */
+.error-message {
+  padding: 1rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  color: #ef4444;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .page-title {
+    color: #f7fafc;
+  }
+
+  .subscriptions-tabs {
+    border-bottom-color: rgba(148, 163, 184, 0.2);
+  }
+
+  .tab-button {
+    color: #cbd5e0;
+  }
+
+  .tab-button:hover {
+    color: #a78bfa;
+  }
+
+  .tab-button.active {
+    color: #a78bfa;
+    border-bottom-color: #a78bfa;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .subscriptions-tabs {
+    margin-bottom: 1rem;
+  }
+
+  .tab-button {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .subscriptions-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+

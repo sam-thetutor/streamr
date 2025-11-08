@@ -1,0 +1,15 @@
+.not-found-page {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+}
+
+.error-code {
+  font-size: 6rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+}
+

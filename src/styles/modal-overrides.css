@@ -1,0 +1,146 @@
+/* ============================================
+   MODAL OVERRIDES - Loaded AFTER Stellar CSS
+   ============================================ */
+
+/* Modal background/backdrop */
+.Modal__background {
+  z-index: 9999 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* Modal container */
+.Modal__container {
+  z-index: 10001 !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  max-width: 500px !important;
+  width: 90% !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Modal content - THE MAIN CARD */
+.Modal__content {
+  background: rgba(15, 23, 42, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 16px !important;
+  padding: 2rem !important;
+  color: #ffffff !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.5rem !important;
+}
+
+/* Modal heading */
+.ModalHeading {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+/* Modal body */
+.ModalBody {
+  color: #ffffff !important;
+}
+
+/* Modal footer */
+.ModalFooter {
+  color: #ffffff !important;
+}
+
+/* All text inside modal */
+.Modal__content *,
+.ModalHeading *,
+.ModalBody *,
+.ModalFooter * {
+  color: #ffffff !important;
+}
+
+/* Modal headings */
+.Modal__content h1,
+.Modal__content h2,
+.Modal__content h3,
+.Modal__content h4,
+.Modal__content h5,
+.Modal__content h6 {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+/* Modal paragraphs, spans, code */
+.Modal__content p,
+.Modal__content span,
+.Modal__content code,
+.ModalBody p,
+.ModalBody span,
+.ModalBody code {
+  color: #ffffff !important;
+}
+
+.Modal__content code,
+.ModalBody code {
+  background: rgba(255, 255, 255, 0.1) !important;
+  padding: 0.25rem 0.5rem !important;
+  border-radius: 8px !important;
+  font-family: 'Inconsolata', monospace !important;
+  color: #ffffff !important;
+}
+
+/* Modal buttons */
+.ModalFooter button,
+.Modal__content button {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+.ModalFooter button[class*="primary"],
+.Modal__content button[class*="primary"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  color: #ffffff !important;
+}
+
+/* Modal close button */
+.Modal__close {
+  z-index: 10 !important;
+}
+
+.Modal__close svg {
+  stroke: #ffffff !important;
+}
+
+/* Light mode - still force dark */
+@media (prefers-color-scheme: light) {
+  .Modal__content {
+    background: rgba(15, 23, 42, 0.95) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+  }
+  
+  .Modal__background {
+    background: rgba(0, 0, 0, 0.6) !important;
+  }
+  
+  .Modal__content *,
+  .ModalHeading *,
+  .ModalBody *,
+  .ModalFooter * {
+    color: #ffffff !important;
+  }
+}
+

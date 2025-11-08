@@ -1,0 +1,173 @@
+/* Navbar Styles - Glassmorphism Theme */
+@import "./components/navbar.css";
+
+:global(.Layout__header) {
+  padding: 0.75rem 1.5rem !important;
+  min-height: 64px !important;
+  max-height: 64px !important;
+  height: 64px !important;
+  background: var(--glass-dark-bg) !important;
+  backdrop-filter: var(--glass-backdrop-strong) !important;
+  -webkit-backdrop-filter: var(--glass-backdrop-strong) !important;
+  border-bottom: 1px solid var(--glass-dark-border) !important;
+  box-shadow: var(--glass-dark-shadow) !important;
+}
+
+/* For light mode */
+@media (prefers-color-scheme: light) {
+  :global(.Layout__header) {
+    background: rgba(30, 41, 59, 0.8) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+}
+
+/* Navbar text sizes */
+:global(.Layout__header) * {
+  font-size: 0.875rem !important;
+}
+
+/* Navbar buttons - Glassmorphism */
+:global(.Layout__header) button,
+:global(.Layout__header) .Button {
+  padding: 0.5rem 1rem !important;
+  font-size: 0.875rem !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  line-height: 1.4 !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--color-text-inverse) !important;
+  transition: all var(--transition-base) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+/* Primary button variant in navbar */
+:global(.Layout__header) button[class*="primary"],
+:global(.Layout__header) .Button[class*="primary"],
+:global(.Layout__header) button.variant-primary,
+:global(.Layout__header) .Button.variant-primary {
+  background: var(--gradient-primary) !important;
+  border: none !important;
+  color: var(--color-text-inverse) !important;
+}
+
+:global(.Layout__header) button:hover,
+:global(.Layout__header) .Button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+:global(.Layout__header) button[class*="primary"]:hover,
+:global(.Layout__header) .Button[class*="primary"]:hover,
+:global(.Layout__header) button.variant-primary:hover,
+:global(.Layout__header) .Button.variant-primary:hover {
+  opacity: 0.9 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Navbar text */
+:global(.Layout__header) [class*="Text"],
+:global(.Layout__header) p,
+:global(.Layout__header) span,
+:global(.Layout__header) div {
+  font-size: 0.875rem !important;
+  line-height: 1.4 !important;
+  color: var(--color-text-inverse) !important;
+}
+
+/* Dashboard link in navbar */
+:global(.Layout__header) .dashboard-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  white-space: nowrap !important;
+}
+
+/* Wallet info in navbar - ensure proper display */
+:global(.Layout__header) .wallet-info {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  white-space: nowrap !important;
+}
+
+:global(.Layout__header) .wallet-balance,
+:global(.Layout__header) .wallet-address-button {
+  white-space: nowrap !important;
+}
+
+/* Reduce gap between navbar items */
+:global(.Layout__header) nav {
+  gap: 0.25rem !important;
+}
+
+/* Make ConnectAccount container more compact */
+:global(.Layout__header) > div,
+:global(.Layout__header) > *,
+:global(.Layout__header) .Layout__inset {
+  gap: 0.25rem !important;
+  height: 100% !important;
+  align-items: center !important;
+  padding: 0 !important;
+}
+
+/* Logo/project title */
+:global(.Layout__header) [class*="projectTitle"],
+:global(.Layout__header) [class*="projectId"],
+:global(.Layout__header) h1,
+:global(.Layout__header) h2,
+:global(.Layout__header) h3 {
+  font-size: 1.125rem !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+  color: var(--color-text-inverse) !important;
+}
+
+/* Profile component */
+:global(.Layout__header) [class*="Profile"],
+:global(.Layout__header) .Profile,
+:global(.Layout__header) svg {
+  width: 28px !important;
+  height: 28px !important;
+  color: var(--color-text-inverse) !important;
+}
+
+/* Target Layout__inset inside header */
+:global(.Layout__header .Layout__inset) {
+  padding: 0 1rem !important;
+}
+
+/* Responsive - slightly smaller on mobile */
+@media (max-width: 768px) {
+  :global(.Layout__header) {
+    padding: 0.625rem 1rem !important;
+    min-height: 56px !important;
+    max-height: 56px !important;
+    height: 56px !important;
+  }
+  
+  :global(.Layout__header) button,
+  :global(.Layout__header) .Button {
+    padding: 0.4rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    max-height: 32px !important;
+  }
+  
+  :global(.Layout__header) [class*="projectTitle"],
+  :global(.Layout__header) [class*="projectId"] {
+    font-size: 1rem !important;
+  }
+  
+  :global(.Layout__header) [class*="Profile"],
+  :global(.Layout__header) .Profile,
+  :global(.Layout__header) svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+}
+

@@ -1,0 +1,129 @@
+/* ============================================
+   FORM INPUT OVERRIDES - Loaded AFTER Stellar CSS
+   Plain CSS file - no CSS modules
+   ============================================ */
+
+/* Override ALL Input containers in forms - Multiple selectors for maximum specificity */
+.glass-form-card .Input__container,
+.glass-form-card .Input .Input__container,
+.glass-form-card .Input__container *,
+.glass-form-card .Input__container input,
+.glass-form-card input,
+.glass-form-card textarea,
+.glass-form-card select {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Override Input container in all states */
+.glass-form-card .Input__container,
+.glass-form-card .Input__container:hover,
+.glass-form-card .Input__container:focus,
+.glass-form-card .Input__container:focus-within,
+.glass-form-card .Input__container:active,
+.glass-form-card .Input:hover .Input__container,
+.glass-form-card .Input:focus .Input__container,
+.glass-form-card .Input:active .Input__container {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Override nested input elements - ALL states */
+.glass-form-card .Input__container input,
+.glass-form-card .Input__container input:hover,
+.glass-form-card .Input__container input:focus,
+.glass-form-card .Input__container input:active,
+.glass-form-card .Input__container input:disabled,
+.glass-form-card input,
+.glass-form-card input:hover,
+.glass-form-card input:focus,
+.glass-form-card input:active,
+.glass-form-card input:disabled {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  color-scheme: dark;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Override CSS variables that Stellar uses */
+.glass-form-card .Input,
+.glass-form-card .Input__container {
+  --Input-color-background: transparent !important;
+}
+
+.glass-form-card .Input__container {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Force override even with Stellar's variable system */
+.glass-form-card [class*="Input"] [class*="container"],
+.glass-form-card [class*="Input"] [class*="container"] *,
+.glass-form-card [class*="Input"] [class*="container"] input {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* More aggressive selectors for maximum override */
+.glass-form-card * .Input__container,
+.glass-form-card * .Input__container *,
+.glass-form-card * .Input__container input,
+.glass-form-card * input {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* ============================================
+   WEBKIT AUTOFILL OVERRIDES - Critical for paste/autofill
+   ============================================ */
+
+/* Chrome/Safari autofill - use box-shadow trick to override white background */
+.glass-form-card input:-webkit-autofill,
+.glass-form-card input:-webkit-autofill:hover,
+.glass-form-card input:-webkit-autofill:focus,
+.glass-form-card input:-webkit-autofill:active,
+.glass-form-card .Input__container input:-webkit-autofill,
+.glass-form-card .Input__container input:-webkit-autofill:hover,
+.glass-form-card .Input__container input:-webkit-autofill:focus,
+.glass-form-card .Input__container input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  box-shadow: 0 0 0px 1000px transparent inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+  /* Delay autofill background transition to prevent white flash */
+  transition: background-color 99999s ease 0s, background 99999s ease 0s !important;
+}
+
+/* WebKit previewed autofill (sometimes triggered after paste) */
+.glass-form-card input:-webkit-autofill-previewed,
+.glass-form-card .Input__container input:-webkit-autofill-previewed {
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  box-shadow: 0 0 0px 1000px transparent inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Firefox autofill */
+.glass-form-card input:-moz-autofill,
+.glass-form-card .Input__container input:-moz-autofill {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+  color: #ffffff !important;
+}
+
