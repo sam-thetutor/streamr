@@ -1,25 +1,4 @@
-# Scaffold Stellar
-
-Apache 2.0 licensed Ask DeepWiki
-
-Scaffold Stellar is a developer toolkit for building decentralized applications (dApps) and smart contracts on the Stellar blockchain.
-
-It helps you go from idea to working full-stack dApp faster — by providing CLI tools, reusable contract templates, a smart contract registry, and a modern frontend.
-
-## Why Use Scaffold Stellar?
-
-- Simplifies blockchain dApp development
-- Generates smart contract projects and React UIs
-- Deploys smart contracts and manages versions
-- Easy to learn for newcomers; powerful for pros
-
-## What Is Stellar?
-
-Stellar is a blockchain designed for fast, low-cost financial transactions and smart contracts written in Rust and compiled to WebAssembly (Wasm).
-
-With Scaffold Stellar, you write smart contracts in Rust and interact with them using modern TypeScript + React tooling.
-
-## Streamr Pitch Deck
+# Streamr Pitch Deck
 
 ### 1. Problem
 - Creators, collectives, and service platforms struggle to automate continuous payouts or usage-based billing.  
@@ -27,7 +6,7 @@ With Scaffold Stellar, you write smart contracts in Rust and interact with them 
 - Legacy payroll rails are expensive across borders and lack transparency or programmable logic.
 
 ### 2. Solution
-- **Streamr** offers programmable, real-time payment streams and recurring subscriptions built on the Stellar network.  
+- **Streamr** offers programmable, real-time payment streams and recurring subscriptions for stablecoins on the Stellar network.  
 - Treasury teams define per-second rates or subscription cadences once; the Soroban contract enforces distribution autonomously.  
 - Recipients can withdraw accrued balances instantly with on-chain proofs and auditability.
 
